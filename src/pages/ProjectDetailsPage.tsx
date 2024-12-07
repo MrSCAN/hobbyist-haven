@@ -1,8 +1,10 @@
 import { useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Youtube } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
+import { StageDetails } from "@/components/StageDetails";
 
-// Using the same demo projects data
 const DEMO_PROJECTS = [
   {
     title: "MrScan AI Document Scanner",
@@ -128,6 +130,23 @@ const ProjectDetailsPage = () => {
     return <div className="container mx-auto px-4 py-8">Project not found</div>;
   }
 
+  const handleShare = async () => {
+    try {
+      await navigator.share({
+        title: project.title,
+        text: project.description,
+        url: window.location.href,
+      });
+    } catch (err) {
+      // Fallback for browsers that don't support native sharing
+      navigator.clipboard.writeText(window.location.href);
+      toast({
+        title: "Link copied to clipboard",
+        description: "You can now share this project with others",
+      });
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
@@ -136,7 +155,12 @@ const ProjectDetailsPage = () => {
           alt={project.title}
           className="w-full h-64 object-cover rounded-lg mb-6"
         />
-        <h1 className="text-3xl font-bold mb-4">{project.title}</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold">{project.title}</h1>
+          <Button onClick={handleShare} variant="secondary">
+            Share Project
+          </Button>
+        </div>
         
         <Tabs defaultValue="overview" className="mt-6">
           <TabsList className="w-full">
@@ -176,31 +200,27 @@ const ProjectDetailsPage = () => {
           </TabsContent>
 
           <TabsContent value="stages" className="mt-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-12">
               {project.stages.map((stage, index) => (
-                <div
+                <StageDetails
                   key={index}
-                  className="border rounded-lg overflow-hidden bg-card"
-                >
-                  <img
-                    src={stage.imageUrl}
-                    alt={stage.title}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold mb-2">{stage.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      {stage.description}
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {stage.techStack.map((tech) => (
-                        <span key={tech} className="tech-tag">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                  {...stage}
+                  documentation={`
+                    # Stage Documentation
+                    
+                    ## Overview
+                    ${stage.description}
+                    
+                    ## Technical Implementation
+                    This stage focused on implementing core functionality using ${stage.techStack.join(", ")}.
+                    
+                    ## Progress
+                    - Initial setup and configuration
+                    - Core feature implementation
+                    - Testing and optimization
+                  `}
+                  youtubeUrl={project.youtubeUrl}
+                />
               ))}
             </div>
           </TabsContent>

@@ -31,14 +31,28 @@ const DEMO_PROJECTS = [
         description: "Implementation of the basic document scanning and enhancement features",
         techStack: ["OpenCV", "Python"],
         imageUrl: "https://images.unsplash.com/photo-1633265486064-086b219458ec?w=500&q=80",
+        documentation: `
+          # Core Scanning Engine Development
+          
+          This stage focused on implementing the fundamental scanning capabilities using OpenCV and Python.
+          Key achievements include document edge detection and initial image enhancement algorithms.
+        `,
+        youtubeUrl: "https://youtube.com/watch?v=demo-mrscan-stage1"
       },
       {
         title: "Mobile App Development",
         description: "Creation of the cross-platform mobile application",
         techStack: ["React Native", "TypeScript"],
         imageUrl: "https://images.unsplash.com/photo-1633265486064-086b219458ec?w=500&q=80",
-      },
-    ],
+        documentation: `
+          # Mobile Application Development
+          
+          In this stage, we built the cross-platform mobile interface using React Native.
+          Implemented the camera integration and real-time processing features.
+        `,
+        youtubeUrl: "https://youtube.com/watch?v=demo-mrscan-stage2"
+      }
+    ]
   },
   {
     title: "AI Art Generator",
