@@ -3,6 +3,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button";
 import { ProjectDetails } from "./ProjectDetails";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Stage {
   title: string;
@@ -33,10 +34,17 @@ export const ProjectCard = ({
   stages,
 }: ProjectCardProps) => {
   const [showDetails, setShowDetails] = useState(false);
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    // Open project details in a new tab
+    const projectSlug = title.toLowerCase().replace(/\s+/g, '-');
+    window.open(`/projects/${projectSlug}`, '_blank');
+  };
 
   return (
     <>
-      <Card className="project-card overflow-hidden cursor-pointer" onClick={() => setShowDetails(true)}>
+      <Card className="project-card overflow-hidden cursor-pointer" onClick={handleCardClick}>
         <CardHeader className="p-0">
           <img
             src={imageUrl}

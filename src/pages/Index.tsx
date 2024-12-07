@@ -3,39 +3,40 @@ import { ProjectCard } from "@/components/ProjectCard";
 
 const DEMO_PROJECTS = [
   {
-    title: "Smart Home Dashboard",
-    description: "A beautiful dashboard for monitoring and controlling IoT devices with real-time updates.",
-    techStack: ["React", "TypeScript", "WebSocket"],
-    repoUrls: ["https://github.com/demo/smart-home-dashboard"],
-    imageUrl: "https://images.unsplash.com/photo-1558002038-1055907df827?w=500&q=80",
+    title: "MrScan AI Document Scanner",
+    description: "An intelligent document scanning solution powered by AI that automatically detects, enhances, and organizes your documents with advanced OCR capabilities.",
+    techStack: ["React Native", "TensorFlow", "Python", "OpenCV"],
+    repoUrls: ["https://github.com/demo/mrscan-mobile", "https://github.com/demo/mrscan-backend"],
+    imageUrl: "https://images.unsplash.com/photo-1633265486064-086b219458ec?w=500&q=80",
     documentation: `
-      # Smart Home Dashboard
+      # MrScan AI Document Scanner
 
       ## Overview
-      This project provides a centralized dashboard for managing IoT devices in your home.
+      MrScan is a state-of-the-art document scanning solution that leverages AI to provide perfect scans every time.
 
       ## Features
-      - Real-time device status updates
-      - Automated scheduling
-      - Energy usage monitoring
-      - Mobile-responsive design
+      - Automatic document edge detection
+      - Real-time perspective correction
+      - Advanced OCR with multiple language support
+      - Cloud synchronization
+      - Batch scanning capabilities
 
-      ## Technical Details
-      Built using React and TypeScript, with WebSocket for real-time communications.
+      ## Technical Architecture
+      Built using React Native for mobile, with TensorFlow and OpenCV for image processing.
     `,
-    youtubeUrl: "https://youtube.com/watch?v=demo",
+    youtubeUrl: "https://youtube.com/watch?v=demo-mrscan",
     stages: [
       {
-        title: "Initial Setup",
-        description: "Basic dashboard layout and device connection",
-        techStack: ["React", "TypeScript"],
-        imageUrl: "https://images.unsplash.com/photo-1558002038-1055907df827?w=500&q=80",
+        title: "Core Scanning Engine",
+        description: "Implementation of the basic document scanning and enhancement features",
+        techStack: ["OpenCV", "Python"],
+        imageUrl: "https://images.unsplash.com/photo-1633265486064-086b219458ec?w=500&q=80",
       },
       {
-        title: "Real-time Updates",
-        description: "Added WebSocket integration for live device status",
-        techStack: ["WebSocket", "React"],
-        imageUrl: "https://images.unsplash.com/photo-1558002038-1055907df827?w=500&q=80",
+        title: "Mobile App Development",
+        description: "Creation of the cross-platform mobile application",
+        techStack: ["React Native", "TypeScript"],
+        imageUrl: "https://images.unsplash.com/photo-1633265486064-086b219458ec?w=500&q=80",
       },
     ],
   },
