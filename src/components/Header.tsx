@@ -1,5 +1,4 @@
 import { Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export const Header = () => {
@@ -17,7 +16,6 @@ export const Header = () => {
               className="pl-8"
             />
           </div>
-          <Button>Share Project</Button>
         </div>
       </div>
     </header>

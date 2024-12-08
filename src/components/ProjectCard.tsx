@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ProjectDetails } from "./ProjectDetails";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "@/components/ui/use-toast";
 
 interface Stage {
   title: string;
@@ -37,9 +38,25 @@ export const ProjectCard = ({
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    // Open project details in a new tab
     const projectSlug = title.toLowerCase().replace(/\s+/g, '-');
     window.open(`/projects/${projectSlug}`, '_blank');
+  };
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await navigator.share({
+        title: `Project: ${title}`,
+        text: description,
+        url: window.location.href,
+      });
+    } catch (err) {
+      navigator.clipboard.writeText(window.location.href);
+      toast({
+        title: "Link copied to clipboard",
+        description: "You can now share this project with others",
+      });
+    }
   };
 
   return (
@@ -78,16 +95,25 @@ export const ProjectCard = ({
               </a>
             ))}
           </div>
-          <Button 
-            variant="secondary" 
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              // Add collaboration logic here
-            }}
-          >
-            Collaborate
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              variant="secondary" 
+              size="sm"
+              onClick={handleShare}
+            >
+              Share
+            </Button>
+            <Button 
+              variant="secondary" 
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                // Add collaboration logic here
+              }}
+            >
+              Collaborate
+            </Button>
+          </div>
         </CardFooter>
       </Card>
 
