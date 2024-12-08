@@ -1,77 +1,71 @@
-import { PrismaClient } from '@prisma/client';
+// Mock data until backend is set up
+const MOCK_PROJECTS = [
+  {
+    id: '1',
+    title: "MrScan AI Document Scanner",
+    description: "An intelligent document scanning solution powered by AI that automatically detects, enhances, and organizes your documents with advanced OCR capabilities.",
+    techStack: ["React Native", "TensorFlow", "Python", "OpenCV"],
+    repoUrls: ["https://github.com/demo/mrscan-mobile", "https://github.com/demo/mrscan-backend"],
+    imageUrl: "https://images.unsplash.com/photo-1633265486064-086b219458ec?w=500&q=80",
+    documentation: "# MrScan AI Document Scanner\n\n## Overview\nMrScan is a state-of-the-art document scanning solution...",
+    youtubeUrl: "https://youtube.com/watch?v=demo-mrscan",
+    stages: [
+      {
+        id: '1',
+        title: "Core Scanning Engine",
+        description: "Implementation of the basic document scanning and enhancement features",
+        techStack: ["OpenCV", "Python"],
+        imageUrl: "https://images.unsplash.com/photo-1633265486064-086b219458ec?w=500&q=80",
+        documentation: "Core scanning implementation details...",
+        projectId: '1'
+      }
+    ],
+    author: {
+      name: "Demo User",
+      email: "demo@example.com"
+    }
+  }
+];
 
-const prisma = new PrismaClient();
+const MOCK_USERS = [
+  {
+    id: '1',
+    email: 'admin@example.com',
+    name: 'Admin User',
+    role: 'ADMIN'
+  }
+];
 
 export const getProjects = async () => {
-  return prisma.project.findMany({
-    include: {
-      stages: true,
-      author: {
-        select: {
-          name: true,
-          email: true,
-        },
-      },
-    },
-  });
+  return MOCK_PROJECTS;
 };
 
 export const getProjectBySlug = async (slug: string) => {
-  return prisma.project.findFirst({
-    where: {
-      title: {
-        equals: slug.split('-').join(' '),
-        mode: 'insensitive',
-      },
-    },
-    include: {
-      stages: true,
-      author: {
-        select: {
-          name: true,
-          email: true,
-        },
-      },
-    },
-  });
+  return MOCK_PROJECTS.find(
+    p => p.title.toLowerCase().replace(/\s+/g, '-') === slug
+  );
 };
 
 export const createProject = async (data: any, authorId: string) => {
-  return prisma.project.create({
-    data: {
-      ...data,
-      authorId,
-    },
-  });
+  console.log('Creating project:', { data, authorId });
+  return MOCK_PROJECTS[0];
 };
 
 export const updateProject = async (id: string, data: any) => {
-  return prisma.project.update({
-    where: { id },
-    data,
-  });
+  console.log('Updating project:', { id, data });
+  return MOCK_PROJECTS[0];
 };
 
 export const deleteProject = async (id: string) => {
-  return prisma.project.delete({
-    where: { id },
-  });
+  console.log('Deleting project:', id);
+  return { success: true };
 };
 
 export const getUsers = async () => {
-  return prisma.user.findMany({
-    select: {
-      id: true,
-      email: true,
-      name: true,
-      role: true,
-    },
-  });
+  return MOCK_USERS;
 };
 
 export const updateUserRole = async (id: string, role: 'USER' | 'ADMIN') => {
-  return prisma.user.update({
-    where: { id },
-    data: { role },
-  });
+  console.log('Updating user role:', { id, role });
+  return MOCK_USERS[0];
 };
