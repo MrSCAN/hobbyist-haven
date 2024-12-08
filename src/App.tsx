@@ -9,13 +9,14 @@ import ProjectDetailsPage from "./pages/ProjectDetailsPage";
 import { AdminPage } from "./pages/AdminPage";
 
 const queryClient = new QueryClient();
+const publishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
-if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
-  throw new Error("Missing Clerk Publishable Key");
+if (!publishableKey) {
+  console.warn("Missing Clerk Publishable Key - Authentication features will be disabled");
 }
 
 const App = () => (
-  <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
+  <ClerkProvider publishableKey={publishableKey ?? ''}>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
