@@ -10,12 +10,12 @@ import { AdminPage } from "./pages/AdminPage";
 
 const queryClient = new QueryClient();
 
-if (!process.env.VITE_CLERK_PUBLISHABLE_KEY) {
+if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
   throw new Error("Missing Clerk Publishable Key");
 }
 
 const App = () => (
-  <ClerkProvider publishableKey={process.env.VITE_CLERK_PUBLISHABLE_KEY}>
+  <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
