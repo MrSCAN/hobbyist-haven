@@ -1,3 +1,7 @@
+# This schema has been moved to the backend repository
+# See: https://github.com/your-org/hobbyist-haven-backend/blob/main/prisma/schema.prisma
+
+# For reference only - DO NOT USE
 generator client {
   provider = "prisma-client-js"
 }

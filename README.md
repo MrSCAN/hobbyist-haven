@@ -1,69 +1,118 @@
-# Welcome to your Lovable project
+# Hobbyist Haven
 
-## Project info
+A platform for hobbyists to showcase their projects and collaborate with others.
 
-**URL**: https://lovable.dev/projects/8739b956-d9de-4cec-a10c-ae87f8b603bc
+## Project Structure
 
-## How can I edit this code?
+This project is split into two repositories:
 
-There are several ways of editing your application.
+- Frontend (Current Repository): React application built with Vite, TypeScript, and shadcn/ui
+- Backend: [hobbyist-haven-backend](https://github.com/your-org/hobbyist-haven-backend) - Express.js API with Prisma and PostgreSQL
 
-**Use Lovable**
+## Frontend Setup
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/8739b956-d9de-4cec-a10c-ae87f8b603bc) and start prompting.
+1. Clone this repository:
+```bash
+git clone https://github.com/your-org/hobbyist-haven
+cd hobbyist-haven
+```
 
-Changes made via Lovable will be committed automatically to this repo.
+2. Install dependencies:
+```bash
+npm install
+```
 
-**Use your preferred IDE**
+3. Create a `.env.local` file in the root directory with the following variables:
+```env
+VITE_API_URL=http://localhost:3000/api
+VITE_CLERK_PUBLISHABLE_KEY=your_clerk_key_here
+```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+4. Start the development server:
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The frontend will be available at `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Backend Setup
 
-**Use GitHub Codespaces**
+1. Clone the backend repository:
+```bash
+git clone https://github.com/your-org/hobbyist-haven-backend
+cd hobbyist-haven-backend
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+2. Install dependencies:
+```bash
+npm install
+```
 
-## What technologies are used for this project?
+3. Create a `.env` file in the root directory with the following variables:
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/hobbyist_haven"
+CLERK_SECRET_KEY=your_clerk_secret_key_here
+CORS_ORIGIN=http://localhost:8080
+```
 
-This project is built with .
+4. Set up the database:
+```bash
+npx prisma migrate dev
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+5. Start the development server:
+```bash
+npm run dev
+```
 
-## How can I deploy this project?
+The API will be available at `http://localhost:3000`
 
-Simply open [Lovable](https://lovable.dev/projects/8739b956-d9de-4cec-a10c-ae87f8b603bc) and click on Share -> Publish.
+## Development
 
-## I want to use a custom domain - is that possible?
+When developing locally, make sure both the frontend and backend servers are running:
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+1. Start the backend server (port 3000)
+2. Start the frontend development server (port 8080)
+3. The frontend will automatically proxy API requests to the backend
+
+## API Documentation
+
+The API documentation is available at `http://localhost:3000/api-docs` when running the backend server.
+
+## Environment Variables
+
+### Frontend (.env.local)
+- `VITE_API_URL`: Backend API URL (default: http://localhost:3000/api)
+- `VITE_CLERK_PUBLISHABLE_KEY`: Clerk authentication publishable key
+
+### Backend (.env)
+- `DATABASE_URL`: PostgreSQL connection string
+- `CLERK_SECRET_KEY`: Clerk authentication secret key
+- `CORS_ORIGIN`: Frontend URL for CORS (default: http://localhost:8080)
+
+## Deployment
+
+### Frontend
+1. Build the frontend:
+```bash
+npm run build
+```
+
+2. Deploy the `dist` directory to your hosting service
+
+### Backend
+1. Set up a PostgreSQL database
+2. Deploy the backend to your hosting service
+3. Set the required environment variables
+4. Run database migrations:
+```bash
+npx prisma migrate deploy
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
