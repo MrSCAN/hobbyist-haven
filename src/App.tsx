@@ -16,7 +16,7 @@ if (!publishableKey) {
 }
 
 const App = () => (
-  <ClerkProvider publishableKey={publishableKey ?? ''}>
+  <ClerkProvider publishableKey={publishableKey}>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
