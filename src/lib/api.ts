@@ -1,5 +1,5 @@
 import { MOCK_PROJECTS, MOCK_USERS } from './mockData';
-// import { prisma } from './db'; // Uncomment when database is ready
+import { prisma } from './db'; // Uncomment when database is ready
 
 // Demo implementation using mock data
 export const getProjects = async () => {
@@ -87,4 +87,12 @@ export const updateUserRole = async (id: string, role: 'USER' | 'ADMIN') => {
   //   where: { id },
   //   data: { role },
   // });
+};
+
+export const checkUserRole = async (userId: string) => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch user role');
+  }
+  return response.json();
 };

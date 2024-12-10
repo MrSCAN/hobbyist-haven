@@ -6,11 +6,21 @@ import asyncHandler from 'express-async-handler';
 const router = express.Router();
 const prisma = new PrismaClient();
 
-router.get('/', requireAdmin, asyncHandler(async (req, res) => {
-  const users = await prisma.user.findMany();
-  res.json(users);
+// Get user role
+router.get('/:id', requireAuth, asyncHandler(async (req, res) => {
+  const user = await prisma.user.findUnique({
+    where: { id: req.params.id },
+    select: { role: true },
+  });
+  
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+  
+  res.json(user);
 }));
 
+// Update user role (admin only)
 router.put('/:id/role', requireAdmin, asyncHandler(async (req, res) => {
   const { role } = req.body;
   const user = await prisma.user.update({
