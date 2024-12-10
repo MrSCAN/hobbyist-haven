@@ -2,6 +2,8 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background-color: #1a1a1a;
+    color: #ffffff;
 }
 
 main {
@@ -10,6 +12,8 @@ main {
 
 .project-card {
     transition: transform 0.3s ease-in-out;
+    background-color: #2d2d2d;
+    border: 1px solid #404040;
 }
 
 .project-card:hover {
@@ -24,6 +28,14 @@ main {
     font-size: 0.8rem;
     padding: 0.25rem 0.5rem;
     border-radius: 9999px;
+    background-color: #404040;
+    color: #ffffff;
+}
+
+.form-control {
+    background-color: #2d2d2d;
+    border-color: #404040;
+    color: #ffffff;
 }
 
 .form-control:focus {
@@ -31,4 +43,23 @@ main {
     color: #fff;
     border-color: #0d6efd;
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.navbar {
+    background-color: #2d2d2d !important;
+}
+
+.card {
+    background-color: #2d2d2d;
+    border-color: #404040;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
 }
