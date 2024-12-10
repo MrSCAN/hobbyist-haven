@@ -1,28 +1,53 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getUsers, updateUserRole } from "@/lib/api";
+import { getUsers, updateUserRole } from "@/lib/apiClient";
 import { Button } from "./ui/button";
 import { toast } from "./ui/use-toast";
+import { useAuth } from "@clerk/clerk-react";
+import { Skeleton } from "./ui/skeleton";
 
 export const AdminDashboard = () => {
   const queryClient = useQueryClient();
+  const { getToken } = useAuth();
+
   const { data: users, isLoading } = useQuery({
     queryKey: ['users'],
-    queryFn: getUsers,
+    queryFn: async () => {
+      const token = await getToken();
+      return getUsers(token || '');
+    },
   });
 
   const updateRoleMutation = useMutation({
-    mutationFn: ({ id, role }: { id: string; role: 'USER' | 'ADMIN' }) => 
-      updateUserRole(id, role),
+    mutationFn: async ({ id, role }: { id: string; role: 'USER' | 'ADMIN' }) => {
+      const token = await getToken();
+      return updateUserRole(id, role, token || '');
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       toast({
         title: "Role updated successfully",
       });
     },
+    onError: (error) => {
+      toast({
+        title: "Failed to update role",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
+        <div className="space-y-4">
+          {[...Array(3)].map((_, i) => (
+            <Skeleton key={i} className="h-20 w-full" />
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (
