@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card bg-dark border-secondary">
+    <img src="{{ project.image_url }}" class="card-img-top" alt="{{ project.title }}">
+    <div class="card-body">
+        <h1 class="card-title">{{ project.title }}</h1>
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            {% for tech in project.tech_stack %}
+            <span class="badge bg-secondary">{{ tech }}</span>
+            {% endfor %}
+        </div>
+        <p class="card-text">{{ project.description }}</p>
+        
+        <div class="mb-4">
+            <h3>Documentation</h3>
+            <div class="documentation">
+                {{ project.documentation | safe }}
+            </div>
+        </div>
+
+        {% if project.youtube_url %}
+        <div class="mb-4">
+            <h3>Project Video</h3>
+            <div class="ratio ratio-16x9">
+                <iframe src="{{ project.youtube_url }}" allowfullscreen></iframe>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="mb-4">
+            <h3>Repository Links</h3>
+            <div class="list-group bg-dark">
+                {% for url in project.repo_urls %}
+                <a href="{{ url }}" class="list-group-item list-group-item-action bg-dark text-light border-secondary" target="_blank">
+                    {{ url }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
