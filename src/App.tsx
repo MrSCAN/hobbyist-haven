@@ -3,7 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ClerkProvider } from "@clerk/clerk-react";
+import { ClerkProvider, SignIn, SignUp } from "@clerk/clerk-react";
 import Index from "./pages/Index";
 import ProjectDetailsPage from "./pages/ProjectDetailsPage";
 import { AdminPage } from "./pages/AdminPage";
@@ -24,6 +24,8 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/sign-in/*" element={<SignIn routing="path" path="/sign-in" />} />
+            <Route path="/sign-up/*" element={<SignUp routing="path" path="/sign-up" />} />
             <Route path="/projects/:projectSlug" element={<ProjectDetailsPage />} />
             <Route path="/admin" element={<AdminPage />} />
           </Routes>

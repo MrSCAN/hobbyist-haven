@@ -4,11 +4,11 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { RichTextEditor } from './RichTextEditor';
 import { toast } from './ui/use-toast';
-import { useUser } from '@clerk/clerk-react';
+import { useAuth, useSession } from '@clerk/clerk-react';
 
 export const ProjectForm = () => {
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { getToken } = useAuth();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -23,11 +23,12 @@ export const ProjectForm = () => {
     e.preventDefault();
     
     try {
+      const token = await getToken();
       const response = await fetch('/api/projects', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${await user?.getToken()}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           ...formData,
