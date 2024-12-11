@@ -2,12 +2,13 @@ import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import { requireAuth } from '../middleware/auth';
 import asyncHandler from 'express-async-handler';
+import { NextFunction, Request, Response } from 'express';
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
 // Get all projects
-router.get('/', asyncHandler(async (req, res) => {
+router.get('/', asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const projects = await prisma.project.findMany({
     include: {
       author: true,
@@ -18,9 +19,9 @@ router.get('/', asyncHandler(async (req, res) => {
 }));
 
 // Get a single project by ID
-router.get('/:id', asyncHandler(async (req, res) => {
+router.get('/:id', asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const project = await prisma.project.findUnique({
-    where: { id: req.params.id }, // ID is a string in our schema
+    where: { id: req.params.id },
     include: {
       author: true,
       stages: true,
@@ -28,18 +29,20 @@ router.get('/:id', asyncHandler(async (req, res) => {
   });
 
   if (!project) {
-    return res.status(404).json({ message: 'Project not found' });
+    res.status(404).json({ message: 'Project not found' });
+    return;
   }
 
   res.json(project);
 }));
 
 // Create a new project (requires authentication)
-router.post('/', requireAuth, asyncHandler(async (req, res) => {
+router.post('/', requireAuth, asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { title, description, techStack, repoUrls, imageUrl, documentation, youtubeUrl, stages } = req.body;
 
   if (!title || !description) {
-    return res.status(400).json({ message: 'Title and description are required' });
+    res.status(400).json({ message: 'Title and description are required' });
+    return;
   }
 
   const project = await prisma.project.create({
@@ -66,11 +69,11 @@ router.post('/', requireAuth, asyncHandler(async (req, res) => {
 }));
 
 // Update a project by ID (requires authentication)
-router.put('/:id', requireAuth, asyncHandler(async (req, res) => {
+router.put('/:id', requireAuth, asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { title, description, techStack, repoUrls, imageUrl, documentation, youtubeUrl, stages } = req.body;
 
   const project = await prisma.project.update({
-    where: { id: req.params.id }, // ID is a string in our schema
+    where: { id: req.params.id },
     data: {
       title,
       description,
@@ -94,9 +97,9 @@ router.put('/:id', requireAuth, asyncHandler(async (req, res) => {
 }));
 
 // Delete a project by ID (requires authentication)
-router.delete('/:id', requireAuth, asyncHandler(async (req, res) => {
+router.delete('/:id', requireAuth, asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   await prisma.project.delete({
-    where: { id: req.params.id }, // ID is a string in our schema
+    where: { id: req.params.id },
   });
 
   res.status(204).send();
