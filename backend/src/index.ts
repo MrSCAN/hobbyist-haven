@@ -19,6 +19,11 @@ app.use(cors({
 
 app.use(express.json());
 
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({ status: 'OK', message: 'Service is up and running!' });
+});
+
 // API Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
