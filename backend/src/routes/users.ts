@@ -2,22 +2,22 @@ import express, { Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { requireAuth, requireAdmin } from '../middleware/auth';
 import asyncHandler from 'express-async-handler';
-import { webhookHandler } from '@clerk/clerk-sdk-node';
+import { WebhookEvent } from '@clerk/clerk-sdk-node';
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
 // Clerk webhook handler for user creation/updates
-router.post('/webhook', express.raw({ type: 'application/json' }), async (req: Request, res: Response) => {
+router.post('/webhook', express.raw({ type: 'application/json' }), async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const evt = webhookHandler();
+    const evt = req.body as WebhookEvent;
     const { data, type } = evt;
 
     if (type === 'user.created') {
       await prisma.user.create({
         data: {
-          id: data.id,
-          email: data.email_addresses[0].email_address,
+          id: data.id as string,
+          email: (data.email_addresses as any)[0].email_address,
           name: `${data.first_name} ${data.last_name}`.trim(),
           role: 'USER',
         },
