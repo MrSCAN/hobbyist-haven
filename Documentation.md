@@ -1,73 +1,38 @@
 # Hobbyist Haven Documentation
 
-## Clerk Webhook Configuration
+## Authentication
 
-### 1. Create Webhook in Clerk Dashboard
-1. Go to [Clerk Dashboard](https://dashboard.clerk.dev)
-2. Select your application
-3. Navigate to "Webhooks" in the sidebar
-4. Click "Add Endpoint"
-5. Configure the webhook:
-   - URL: `http://localhost:3000/api/webhook`
-   - Events: Select `user.created` and `user.updated`
-   - Version: Select the latest stable version
-   - Sign webhook requests: Enabled (recommended)
-   - Get the webhook secret and add it to your `.env` file
+The application uses a custom authentication system with JWT tokens. Users can sign up and sign in through beautiful, responsive forms that provide a seamless experience.
 
-### 2. Environment Variables
+### Environment Variables
+
 Add these variables to your `.env` file:
 ```env
-CLERK_WEBHOOK_SECRET=your_webhook_secret
+VITE_API_URL=http://localhost:3000/api
 DATABASE_URL=your_postgres_connection_string
 ```
 
-### 3. Backend Configuration
-The webhook endpoint is already configured in `backend/src/routes/users.ts`:
-```typescript
-router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
-  try {
-    const webhook = new Webhook(req.body);
-    const { data, type } = webhook;
+### API Endpoints
 
-    if (type === 'user.created') {
-      await prisma.user.create({
-        data: {
-          id: data.id,
-          email: data.email_addresses[0].email_address,
-          name: `${data.first_name} ${data.last_name}`.trim(),
-          role: 'USER',
-        },
-      });
-    }
+#### Authentication
+- POST `/api/auth/register` - Register a new user
+- POST `/api/auth/login` - Sign in a user
 
-    res.json({ success: true });
-  } catch (error) {
-    console.error('Webhook error:', error);
-    res.status(400).json({ error: 'Webhook error' });
-  }
-});
+Request body for register:
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "securepassword"
+}
 ```
 
-### 4. Testing Webhooks
-1. Use Clerk's Dashboard to send test events
-2. Monitor your server logs for webhook reception
-3. Verify user creation in your database
-
-## Environment Variables
-
-### Frontend (.env.local)
-```env
-VITE_CLERK_PUBLISHABLE_KEY=your_clerk_key
-VITE_API_URL=http://localhost:3000/api
-```
-
-### Backend (.env)
-```env
-DATABASE_URL=postgresql://user:password@localhost:5432/hobbyist_haven
-CLERK_SECRET_KEY=your_clerk_secret_key
-CLERK_WEBHOOK_SECRET=your_webhook_secret
-CORS_ORIGIN=http://localhost:8080
-PORT=3000
+Request body for login:
+```json
+{
+  "email": "john@example.com",
+  "password": "securepassword"
+}
 ```
 
 ## Running the Application
@@ -102,7 +67,7 @@ The application will be available at:
 - API Documentation: `http://localhost:3000/api-docs`
 
 ## Key Features
-1. Clerk Authentication
+1. Custom Authentication System
 2. PostgreSQL + Prisma ORM
 3. Rich Text Editing (TipTap)
 4. Image Upload
@@ -117,3 +82,34 @@ The application uses three main models:
 - ProjectStage: Project development stages
 
 See `backend/prisma/schema.prisma` for detailed schema definitions.
+
+## Admin Access
+
+Admin privileges can only be granted by directly updating the database:
+
+```sql
+UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
+```
+
+## Navigation
+
+- Home: Browse all projects
+- Admin Panel: `/admin` (requires admin role)
+- Project Details: Click any project card
+- Create Project: Available to logged-in users
+
+## Development
+
+- Frontend: React + Vite + TypeScript
+- Backend: Express + Prisma + PostgreSQL
+- UI Components: shadcn/ui
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Submit a pull request
+
+## License
+
+MIT
