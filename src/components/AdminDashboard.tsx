@@ -2,24 +2,21 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getUsers, updateUserRole } from "@/lib/apiClient";
 import { Button } from "./ui/button";
 import { toast } from "./ui/use-toast";
-import { useAuth } from "@clerk/clerk-react";
 import { Skeleton } from "./ui/skeleton";
 
 export const AdminDashboard = () => {
   const queryClient = useQueryClient();
-  const { getToken } = useAuth();
+  const token = localStorage.getItem('token');
 
   const { data: users, isLoading } = useQuery({
     queryKey: ['users'],
     queryFn: async () => {
-      const token = await getToken();
       return getUsers(token || '');
     },
   });
 
   const updateRoleMutation = useMutation({
     mutationFn: async ({ id, role }: { id: string; role: 'USER' | 'ADMIN' }) => {
-      const token = await getToken();
       return updateUserRole(id, role, token || '');
     },
     onSuccess: () => {
