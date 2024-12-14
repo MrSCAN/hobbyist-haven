@@ -2,16 +2,13 @@ import { Header } from "@/components/Header";
 import { ProjectCard } from "@/components/ProjectCard";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProjects } from "@/lib/apiClient";
-import { useAuth } from "@clerk/clerk-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const Index = () => {
-  const { getToken } = useAuth();
-  
   const { data: projects, isLoading, error } = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
-      const token = await getToken();
+      const token = localStorage.getItem('token');
       return fetchProjects(token || '');
     },
   });
