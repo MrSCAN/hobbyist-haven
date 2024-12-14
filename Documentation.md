@@ -1,54 +1,5 @@
 # Hobbyist Haven Documentation
 
-## Codebase Structure
-
-### Frontend (React + Vite)
-
-#### Core Files
-- `src/App.tsx`: Main application component with routing, Clerk authentication, and query client setup
-- `src/index.css`: Global styles and Tailwind CSS configurations
-- `src/main.tsx`: Application entry point
-
-#### Pages (`src/pages/`)
-- `Index.tsx`: Homepage with project grid and search
-- `ProjectDetailsPage.tsx`: Project details with tabs (overview, documentation, stages)
-- `AdminPage.tsx`: Admin dashboard for user management
-
-#### Components (`src/components/`)
-- `Header.tsx`: Navigation bar with search and branding
-- `ProjectCard.tsx`: Project preview card with sharing
-- `ProjectDetails.tsx`: Detailed project information modal
-- `AdminDashboard.tsx`: User and role management interface
-- `RichTextEditor.tsx`: TipTap-based text editor
-- `ProjectForm.tsx`: Project creation/editing form
-- `StageDetails.tsx`: Project stage display component
-
-#### Utilities (`src/lib/`)
-- `apiClient.ts`: Backend API communication
-- `api.ts`: Development mock data
-- `utils.ts`: Common utility functions
-- `db.ts`: Database configuration
-
-#### Hooks (`src/hooks/`)
-- `use-toast.ts`: Toast notification hook
-
-### Backend (Express + Prisma)
-
-#### Core Files
-- `backend/src/index.ts`: Server entry point
-- `backend/prisma/schema.prisma`: Database schema
-
-#### Routes (`backend/src/routes/`)
-- `projects.ts`: Project CRUD operations
-- `users.ts`: User operations and Clerk webhook
-
-#### Middleware (`backend/src/middleware/`)
-- `auth.ts`: Clerk authentication and admin verification
-
-#### Configuration
-- `backend/.env`: Environment variables
-- `backend/swagger.ts`: API documentation
-
 ## Clerk Webhook Configuration
 
 ### 1. Create Webhook in Clerk Dashboard
@@ -57,18 +8,21 @@
 3. Navigate to "Webhooks" in the sidebar
 4. Click "Add Endpoint"
 5. Configure the webhook:
-   - URL: `https://your-api-domain.com/api/users/webhook`
+   - URL: `http://localhost:3000/api/webhook`
    - Events: Select `user.created` and `user.updated`
    - Version: Select the latest stable version
    - Sign webhook requests: Enabled (recommended)
+   - Get the webhook secret and add it to your `.env` file
 
-### 2. Backend Configuration
-1. Add webhook secret to `.env`:
+### 2. Environment Variables
+Add these variables to your `.env` file:
 ```env
 CLERK_WEBHOOK_SECRET=your_webhook_secret
+DATABASE_URL=your_postgres_connection_string
 ```
 
-2. The webhook endpoint is already configured in `backend/src/routes/users.ts`:
+### 3. Backend Configuration
+The webhook endpoint is already configured in `backend/src/routes/users.ts`:
 ```typescript
 router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   try {
@@ -94,7 +48,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 });
 ```
 
-### 3. Testing Webhooks
+### 4. Testing Webhooks
 1. Use Clerk's Dashboard to send test events
 2. Monitor your server logs for webhook reception
 3. Verify user creation in your database
