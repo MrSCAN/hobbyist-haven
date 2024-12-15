@@ -3,44 +3,38 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import { loginUser } from "@/lib/apiClient";
 
 export const SignInForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      const { token, user } = await loginUser(email, password);
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      
+      toast({
+        title: "Welcome back!",
+        description: "Successfully signed in.",
       });
       
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        toast({
-          title: "Welcome back!",
-          description: "Successfully signed in.",
-        });
-        navigate("/");
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Invalid credentials. Please try again.",
-        });
-      }
+      navigate("/");
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Something went wrong. Please try again.",
+        description: "Invalid credentials. Please try again.",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -64,6 +58,7 @@ export const SignInForm = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="bg-background/50"
+              disabled={isLoading}
             />
           </div>
           <div className="space-y-2">
@@ -74,10 +69,11 @@ export const SignInForm = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               className="bg-background/50"
+              disabled={isLoading}
             />
           </div>
-          <Button type="submit" className="w-full">
-            Sign In
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? "Signing in..." : "Sign In"}
           </Button>
         </form>
         <div className="text-center text-sm">
@@ -86,6 +82,7 @@ export const SignInForm = () => {
             variant="link"
             className="p-0 text-primary hover:text-primary/90"
             onClick={() => navigate("/sign-up")}
+            disabled={isLoading}
           >
             Sign Up
           </Button>

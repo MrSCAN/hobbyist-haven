@@ -1,22 +1,40 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
-export const fetchProjects = async (token: string) => {
+export const loginUser = async (email: string, password: string) => {
+  const response = await fetch(`${API_BASE_URL}/users/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!response.ok) throw new Error('Invalid credentials');
+  return response.json();
+};
+
+export const registerUser = async (name: string, email: string, password: string) => {
+  const response = await fetch(`${API_BASE_URL}/users/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, password }),
+  });
+  if (!response.ok) throw new Error('Registration failed');
+  return response.json();
+};
+
+export const fetchProjects = async (token?: string) => {
   const response = await fetch(`${API_BASE_URL}/projects`, {
-    headers: {
-      'Content-Type': 'application/json',
+    headers: token ? {
       'Authorization': `Bearer ${token}`,
-    },
+    } : {},
   });
   if (!response.ok) throw new Error('Failed to fetch projects');
   return response.json();
 };
 
-export const fetchProjectBySlug = async (slug: string, token: string) => {
+export const fetchProjectBySlug = async (slug: string, token?: string) => {
   const response = await fetch(`${API_BASE_URL}/projects/${slug}`, {
-    headers: {
-      'Content-Type': 'application/json',
+    headers: token ? {
       'Authorization': `Bearer ${token}`,
-    },
+    } : {},
   });
   if (!response.ok) throw new Error('Failed to fetch project');
   return response.json();
@@ -52,7 +70,6 @@ export const deleteProject = async (id: string, token: string) => {
   const response = await fetch(`${API_BASE_URL}/projects/${id}`, {
     method: 'DELETE',
     headers: {
-      'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
   });
@@ -63,7 +80,6 @@ export const deleteProject = async (id: string, token: string) => {
 export const getUsers = async (token: string) => {
   const response = await fetch(`${API_BASE_URL}/users`, {
     headers: {
-      'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
   });
@@ -87,7 +103,6 @@ export const updateUserRole = async (id: string, role: 'USER' | 'ADMIN', token: 
 export const checkUserRole = async (userId: string, token: string) => {
   const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
     headers: {
-      'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
   });

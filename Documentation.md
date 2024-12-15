@@ -10,13 +10,24 @@ Add these variables to your `.env` file:
 ```env
 VITE_API_URL=http://localhost:3000/api
 DATABASE_URL=your_postgres_connection_string
+JWT_SECRET=your_jwt_secret_key
 ```
 
 ### API Endpoints
 
 #### Authentication
-- POST `/api/auth/register` - Register a new user
-- POST `/api/auth/login` - Sign in a user
+- POST `/api/users/register` - Register a new user
+- POST `/api/users/login` - Sign in a user
+- GET `/api/users` - Get all users (requires admin)
+- GET `/api/users/:id` - Get user role
+- PUT `/api/users/:id/role` - Update user role (requires admin)
+
+#### Projects
+- GET `/api/projects` - Get all projects
+- GET `/api/projects/:id` - Get project by ID
+- POST `/api/projects` - Create new project (requires authentication)
+- PUT `/api/projects/:id` - Update project (requires authentication)
+- DELETE `/api/projects/:id` - Delete project (requires authentication)
 
 Request body for register:
 ```json
@@ -52,13 +63,13 @@ npm run dev
 cd backend
 
 # Install dependencies
-npm install
+pip install -r requirements.txt
 
 # Run database migrations
-npx prisma migrate dev
+prisma db push
 
 # Start server
-npm run dev
+python app.py
 ```
 
 The application will be available at:
@@ -67,7 +78,7 @@ The application will be available at:
 - API Documentation: `http://localhost:3000/api-docs`
 
 ## Key Features
-1. Custom Authentication System
+1. Custom Authentication System with JWT
 2. PostgreSQL + Prisma ORM
 3. Rich Text Editing (TipTap)
 4. Image Upload
@@ -101,7 +112,7 @@ UPDATE "User" SET role = 'ADMIN' WHERE email = 'admin@example.com';
 ## Development
 
 - Frontend: React + Vite + TypeScript
-- Backend: Express + Prisma + PostgreSQL
+- Backend: Flask + Prisma + PostgreSQL
 - UI Components: shadcn/ui
 
 ## Contributing
