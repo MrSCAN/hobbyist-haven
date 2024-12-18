@@ -10,7 +10,6 @@ export const loginUser = async (email: string, password: string) => {
     method: 'POST',
     headers: defaultHeaders,
     body: JSON.stringify({ email, password }),
-    credentials: 'include',
   });
   
   if (!response.ok) {
@@ -39,7 +38,6 @@ export const fetchProjects = async (token?: string) => {
 
   const response = await fetch(`${API_BASE_URL}/projects`, {
     headers,
-    credentials: 'include',
   });
 
   if (!response.ok) {
