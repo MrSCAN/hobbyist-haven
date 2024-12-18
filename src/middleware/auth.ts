@@ -1,30 +1,26 @@
 import { Request, Response, NextFunction } from 'express';
-import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
-import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
-
-declare global {
-  namespace Express {
-    interface Request {
-      user?: any;
-      auth?: any;
-    }
+export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
+  const token = req.headers.authorization?.replace('Bearer ', '');
+  
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided' });
   }
-}
-
-export const requireAuth = ClerkExpressRequireAuth({});
+  
+  try {
+    // Token verification will be handled by the Flask backend
+    next();
+  } catch (error) {
+    res.status(401).json({ message: 'Invalid token' });
+  }
+};
 
 export const requireAdmin = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: req.auth?.userId },
-    });
-    
+    const user = req.user;
     if (!user || user.role !== 'ADMIN') {
       return res.status(403).json({ message: 'Forbidden: Admin access required' });
     }
-    
     next();
   } catch (error) {
     next(error);

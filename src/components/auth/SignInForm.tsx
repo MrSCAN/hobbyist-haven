@@ -26,7 +26,11 @@ export const SignInForm = () => {
         description: "Successfully signed in.",
       });
       
-      navigate("/");
+      if (user.role === 'ADMIN') {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       toast({
         variant: "destructive",

@@ -1,19 +1,30 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
+const defaultHeaders = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+};
+
 export const loginUser = async (email: string, password: string) => {
   const response = await fetch(`${API_BASE_URL}/users/login`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: defaultHeaders,
     body: JSON.stringify({ email, password }),
+    credentials: 'include',
   });
-  if (!response.ok) throw new Error('Invalid credentials');
+  
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Invalid credentials');
+  }
+  
   return response.json();
 };
 
 export const registerUser = async (name: string, email: string, password: string) => {
   const response = await fetch(`${API_BASE_URL}/users/register`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: defaultHeaders,
     body: JSON.stringify({ name, email, password }),
   });
   if (!response.ok) throw new Error('Registration failed');
@@ -21,12 +32,20 @@ export const registerUser = async (name: string, email: string, password: string
 };
 
 export const fetchProjects = async (token?: string) => {
+  const headers = {
+    ...defaultHeaders,
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+
   const response = await fetch(`${API_BASE_URL}/projects`, {
-    headers: token ? {
-      'Authorization': `Bearer ${token}`,
-    } : {},
+    headers,
+    credentials: 'include',
   });
-  if (!response.ok) throw new Error('Failed to fetch projects');
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch projects');
+  }
+
   return response.json();
 };
 
